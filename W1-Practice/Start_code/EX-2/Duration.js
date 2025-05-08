@@ -30,6 +30,8 @@ class Duration {
    */
   static fromMinutesAndSeconds(minutes = 0, seconds = 0) {
      // YOUR CODE
+     const totalSeconds = minutes * 60 + seconds;
+     return new Duration(totalSeconds);
   }
 
   /**
@@ -38,12 +40,25 @@ class Duration {
    * @returns {Duration} A new Duration representing the sum.
    */
   plus = (other) => {
-         // YOUR CODE
+      // YOUR CODE
+      if (!(other instanceof Duration)) {
+        throw new Error("Argument must be an instance of Duration.");
+      }
+      return new Duration(this._totalSeconds + other._totalSeconds);
   };
 
   // YOUR COMMENT
+  /**
+   * Returns a new Duration by subtracting another duration.
+   * @param {Duration} other - Another duration to subtract.
+   * @returns {Duration} A new Duration representing the minus.
+   */
   minus = (other) => {
-         // YOUR CODE
+      // YOUR CODE
+      if (!(other instanceof Duration)) {
+        throw new Error("Argument must be an instance of Duration.");
+      }
+      return new Duration(this._totalSeconds - other._totalSeconds);
   };
 
   /**
@@ -51,6 +66,11 @@ class Duration {
    * @returns {string} The formatted duration string.
    */
   toString = () => {
-        // YOUR CODE
+      // YOUR CODE
+      const minutes = Math.floor(this._totalSeconds / 60);
+      const seconds = this._totalSeconds % 60;
+      return `${minutes}m ${seconds}s`;
   };
 }
+
+export default Duration;
