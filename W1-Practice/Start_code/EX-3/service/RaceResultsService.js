@@ -1,4 +1,4 @@
-
+import fs from "fs";
 import { Duration } from "../model/Duration.js";
 import { RaceResult } from "../model/RaceResult.js";
 
@@ -23,6 +23,7 @@ export class RaceResultsService {
    */
   addRaceResult(result) {
     // TODO
+    this._raceResults.push(result);
   }
 
   /**
@@ -31,6 +32,17 @@ export class RaceResultsService {
    */
   saveToFile(filePath) {
     // TODO
+    try {
+      // Convert the race results to JSON string
+      const data = JSON.stringify(this._raceResults, null, 2); // `null, 2` adds indentation for readability
+
+      // Save the JSON string to the specified file path
+      fs.writeFileSync(filePath, data, 'utf8');
+
+      console.log("Race results saved to", filePath);
+    } catch (error) {
+      console.error("Error saving race results to file:", error);
+    }
   }
 
   /**
@@ -40,6 +52,21 @@ export class RaceResultsService {
    */
   loadFromFile(filePath) {
     // TODO
+    try {
+      const data = fs.readFileSync(filePath, 'utf8');
+      const rawResults = JSON.parse(data);
+  
+      this._raceResults = rawResults.map(item => {
+        const duration = new Duration(item.time._totalSeconds);
+        return new RaceResult(item.participant_id, item.sport, duration);
+      });
+  
+      return true;
+    } catch (error) {
+      console.error("Error loading race results:", error.message);
+      return false;
+    }
+  
   }
 
   /**
@@ -50,6 +77,12 @@ export class RaceResultsService {
    */
   getTimeForParticipant(participantId, sport) {
        // TODO
+      const result = this._raceResults.find(
+        (raceResult) => raceResult.participant_id === participantId && raceResult.sport === sport
+      );
+    
+      // Return the duration if found, else null
+      return result ? result.time : null;
   }
 
   /**
@@ -59,5 +92,19 @@ export class RaceResultsService {
    */
   getTotalTimeForParticipant(participantId) {
         // TODO
+      const results = this._raceResults.filter(
+        (raceResult) => raceResult.participant_id === participantId
+      );
+
+      if (results.length === 0) {
+        return new Duration(0);
+      }
+
+      const total = results.reduce(
+        (sum, result) => sum.plus(result.time),
+        new Duration(0)
+      );
+
+      return total;
   }
 }
