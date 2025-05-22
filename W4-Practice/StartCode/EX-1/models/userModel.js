@@ -21,27 +21,4 @@ let users = [
     { id: 20, name: 'Tina Morgan', email: 'tina.morgan@example.com' }
 ];
 
-export const getAllUsers = () => users;
-
-export const getUserById = (id) => users.find(user => user.id === id);
-
-export const addUser = (name, email) => {
-    const newUser = { id: users.length + 1, name, email };
-    users.push(newUser);
-    return newUser;
-};
-
-export const updateUser = (id, name, email) => {
-    const user = users.find(u => u.id === id);
-    if (!user) return null;
-    if (name) user.name = name;
-    if (email) user.email = email;
-    return user;
-};
-
-export const deleteUser = (id) => {
-    const index = users.findIndex(u => u.id === id);
-    if (index === -1) return false;
-    users.splice(index, 1);
-    return true;
-};
+export default users;
