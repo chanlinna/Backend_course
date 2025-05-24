@@ -1,4 +1,4 @@
-import journalists from "../models/data.js";
+import { journalists } from "../models/data.js";
 
 // list all journalists 
 export const listAllJournalists = (req, res) => {
