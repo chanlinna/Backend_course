@@ -59,6 +59,18 @@ export const deleteCategoryById = (req, res) => {
 // get Articles from a categories 
 export const getArticlesByCategory = (req, res) => {
     const categoryId = parseInt(req.params.id);
+
+    //check if category exists
+    const category = categories.some(c => c.id === categoryId);
+    if(!category) {
+        return res.status(404).json({ error: 'Category not found' });
+    }
     const categoryArticles = articles.filter( a => a.categoryId === categoryId);
+
+    // if no articles
+    if(categoryArticles.length === 0) {
+        return res.status(404).json({ error: 'No articles found for this category' });
+    }
+
     res.json(categoryArticles);
 };
