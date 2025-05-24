@@ -1,4 +1,4 @@
-import { articles } from "../models/data.js";
+import { articles, journalists, categories } from "../models/data.js";
 
 //list all articles
 export const listAllArticles = (req, res) => {
@@ -22,6 +22,18 @@ export const createArticle = (req, res) => {
         return res.status(400).json({ error: 'Title, content, journalistId, and categoryId are required' });
     }
 
+    // Check if journalist exists
+    const journalist = journalists.some(j => j.id === journalistId);
+    if (!journalist) {
+        return res.status(400).json({ error: 'Invalid journalistId' });
+    }
+
+    // Check if category exists
+    const category = categories.some(c => c.id === categoryId);
+    if (!category) {
+        return res.status(400).json({ error: 'Invalid categoryId' });
+    }
+
     const newArticle = {
         id: articles.length + 1,
         title,
@@ -42,6 +54,19 @@ export const updateArticleById = (req, res) => {
     if(!article) {
         return res.status(404).json({ error: 'Article not found'});
     }
+
+    // Check if journalist exists
+    const journalist = journalists.some(j => j.id === journalistId);
+    if (!journalist) {
+        return res.status(400).json({ error: 'Invalid journalistId' });
+    }
+
+    // Check if category exists
+    const category = categories.some(c => c.id === categoryId);
+    if (!category) {
+        return res.status(400).json({ error: 'Invalid categoryId' });
+    }
+    
     if(title) article.title = title;
     if(content) article.content = content;
     if(journalistId) article.journalistId = journalistId;
