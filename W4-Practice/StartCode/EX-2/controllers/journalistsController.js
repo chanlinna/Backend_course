@@ -48,3 +48,23 @@ export const updateJournalistById = (req, res) => {
 
 };
 
+//delete journalist
+export const deleteJournalistById = (req, res) => {
+    const journalistId = parseInt(req.params.id);
+    const index = journalists.findIndex( j => j.id === journalistId);
+    if(index === -1) {
+        return res.status(404).json({ error: 'Journalist not found' });
+    }
+
+    journalists.splice(index, 1);
+
+    res.status(204).send();
+};
+
+// get Article by specific journalist 
+export const getArticlesByJournalist = (req, res) => {
+    const journalistId = parseInt(req.params.id);
+    const journalistArticles = articles.filter(a => a.journalistId === id);
+    res.json(journalistArticles);
+};
+
