@@ -5,7 +5,7 @@ import {
     createArticle,
     updateArticleById,
     deleteArticleById
-} from '../controllers/articleController.js';
+} from '../controllers/articlesController.js';
 import validateArticle from '../middleware/validateArtcle.js';
 
 const router = express.Router();
