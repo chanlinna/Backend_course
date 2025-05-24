@@ -59,5 +59,6 @@ export const deleteCategoryById = (req, res) => {
 // get Articles from a categories 
 export const getArticlesByCategory = (req, res) => {
     const categoryId = parseInt(req.params.id);
-    const categoryArticles = articles.find
-}
+    const categoryArticles = articles.filter( a => a.categoryId === categoryId);
+    res.json(categoryArticles);
+};
