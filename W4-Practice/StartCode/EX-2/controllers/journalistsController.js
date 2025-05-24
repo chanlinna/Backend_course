@@ -72,6 +72,12 @@ export const getArticlesByJournalist = (req, res) => {
     }
 
     const journalistArticles = articles.filter(a => a.journalistId === journalistId);
+
+    // if no articles
+    if(journalistArticles.length === 0) {
+        return res.status(404).json({ error: 'No articles found for this journalist' });
+    }
+    
     res.json(journalistArticles);
 };
 
