@@ -7,7 +7,7 @@ export const listAllJournalists = (req, res) => {
 
 //get single journalist
 export const getJournalist = (req, res) => {
-    const journalistId = parseInt(re1.params.id);
+    const journalistId = parseInt(req.params.id);
     const journalist = journalists.find( j => j.id === journalistId);
     if (!journalist) {
         return res.status(404).json({ error: 'Journalist not found' });
@@ -64,7 +64,14 @@ export const deleteJournalistById = (req, res) => {
 // get Article by specific journalist 
 export const getArticlesByJournalist = (req, res) => {
     const journalistId = parseInt(req.params.id);
-    const journalistArticles = articles.filter(a => a.journalistId === id);
+
+    //check if journalistId exists
+    const journalist = journalists.some(j => j.id === journalistId);
+    if(!journalist) {
+        return res.status(404).json({ error: 'Journalist not found' });
+    }
+
+    const journalistArticles = articles.filter(a => a.journalistId === journalistId);
     res.json(journalistArticles);
 };
 
