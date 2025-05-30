@@ -3,8 +3,9 @@ import articlesRoutes from './routes/articlesRoutes.js';
 import journalistsRoutes from './routes/journalistsRoutes.js';
 import categoriesRoutes from './routes/categoriesRoutes.js';
 import logger from './middleware/logger.js';
-
+import cors from 'cors';
 const app = express();
+app.use(cors());
 
 const PORT = 3000;
 app.use(express.json());

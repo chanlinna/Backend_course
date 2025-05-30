@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function ArticleList() {
   const [articles, setArticles] = useState([]);
+  const navigate = useNavigate();
   // Fetch all articles when component mounts
   useEffect(() => {
     fetchArticles();
@@ -10,11 +12,24 @@ export default function ArticleList() {
 
   const fetchArticles = async () => {
     // Fetch articles from the API
-    
+    try {
+      const res = await axios.get('http://localhost:3000/articles');
+      setArticles(res.data);
+    }
+    catch (err) {
+      console.error('Failted to fetch articles:', err);
+    }
   };
 
   const deleteArticle = async (id) => {
     // Delete an article by ID
+    try {
+      await axios.delete(`http://localhost:3000/articles/${id}`);
+      fetchArticles();
+    }
+    catch (err) {
+      console.error('Failed to delete article:', err);
+    }
   };
 
   return (
@@ -34,9 +49,11 @@ export default function ArticleList() {
             <button onClick={() => deleteArticle(article.id)}>Delete</button>
             <button onClick={() => {
               // Navigate to update article form with article ID /articles/update/${article.id}
+              navigate(`/articles/update/${article.id}`)
             }}>Update</button>
             <button onClick={() => {
               // Navigate to view article details with article ID /articles/${article.id}
+              navigate(`/articles/${article.id}`)
             }}>View</button>
           </li>
         ))}

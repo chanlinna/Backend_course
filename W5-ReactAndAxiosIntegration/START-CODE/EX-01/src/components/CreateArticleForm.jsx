@@ -1,12 +1,13 @@
+import axios from 'axios';
 import { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 
 export default function ArticleForm() {
   const [form, setForm] = useState({
     title: '',
     content: '',
     journalistId: '',
-    categoryId: '',
+    categoryId: ''
   });
 
   const handleChange = (e) => {
@@ -16,6 +17,26 @@ export default function ArticleForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Validate form data
+    try {
+      await axios.post('http://localhost:3000/articles', {
+        ...form,
+        journalistId: Number(form.journalistId),
+        categoryId: Number(form.categoryId)
+      });
+      alert('Article added successfully!');
+      setForm(
+        {
+          title: '',
+          content: '',
+          journalistId: '',
+          categoryId: ''
+        }
+      )
+    }
+    catch (error) {
+      console.error('Error adding article:', error);
+      alert('Failed to add article!');
+    }
   };
 
   return (
