@@ -9,7 +9,7 @@ import { pool } from "../utils/database.js";
 export async function getArticles() {
     // TODO
     const [rows] = await pool.query(
-        "select a.*, j.name as 'Journalist' from articles a join journalists j on a.journalistId = j.id;");
+        "select a.*, j.name as journalistName from articles a join journalists j on a.journalistId = j.id;");
         return rows;
 }
 
@@ -17,7 +17,7 @@ export async function getArticles() {
 export async function getArticleById(id) {
     // TODO
     const [rows] = await pool.query(
-        "select a.*, j.name as ''Journalist' from articles a join journalists j on a.journalistId = j.id where a.id = ?;", [id]
+        "select a.*,j.id as journalistId, j.name as journalistName from articles a join journalists j on a.journalistId = j.id where a.id = ?;", [id]
     );
     return rows[0];
 }
@@ -25,10 +25,10 @@ export async function getArticleById(id) {
 // Create a new article
 export async function createArticle(article) {
     // TODO
-    const { title, content, journalist, category } = article;
+    const { title, content, category, journalistId } = article;
     const [result] = await pool.query(
-        "insert into articles (title, content, journalist, category) values (?, ?, ?, ?)",
-        [title, content, journalist, category]
+        "insert into articles (title, content, category, journalistId) values (?, ?, ?, ?)",
+        [title, content, category, journalistId]
     );
     const id = result.insertId;
     return getArticleById(id);
@@ -37,12 +37,12 @@ export async function createArticle(article) {
 // Update an article by ID
 export async function updateArticle(id, updatedData) {
     // TODO
-    const { title, content, journalist, category } = updatedData;
+    const { title, content, category, journalistId } = updatedData;
     await pool.query(
-        "update articles set title = ?, content = ?, journalist = ?, category = ? where id = ?",
-        [title, content, journalist, category, id]
+        "update articles set title = ?, content = ?, category = ?, journalistId = ? where id = ?",
+        [title, content, category, journalistId, id]
     );
-
+    return getArticleById(id);
 }
 
 // Delete an article by ID
@@ -56,7 +56,7 @@ export async function deleteArticle(id) {
 //Fetch all articles written by a specific journalist name 
 export async function getArticlesByJournalistId(journalistId) {
     const [rows] = await pool.query(
-        "select a.*, j.name as 'Journalist'from articles a join journalists j on a.journalistId = j.id where a.journalistId = ?", [journalistId]
+        "select a.*, j.name as journalistName from articles a join journalists j on a.journalistId = j.id where a.journalistId = ?", [journalistId]
     );
     return rows;
 }

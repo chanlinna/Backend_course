@@ -48,7 +48,7 @@ export async function updateArticle(req, res) {
     if (!updatedArticle) {
       return res.status(404).json({ message: "Article not found" });
     }
-    res.json(updatedArticle);
+    res.status(200).json({ message: "Updated" });
   } catch (error) {
     console.error("Error updating article:", error);
     res.status(500).json({ message: "Server error" });
@@ -69,7 +69,7 @@ export async function deleteArticle(req, res) {
 //get articles by journalists Id
 export async function getArticlesByJournalistId(req, res) {
   try {
-    const articles = await articleRepository.getArticlesByJournalistId(req.params.journalistId);
+    const articles = await articleRepository.getArticlesByJournalistId(req.params.id);
     if(!articles || articles.length === 0) {
       return res.status(404).json({ message: "No articles found for this journalist" });
     }

@@ -20,7 +20,7 @@ export default function ArticlePage() {
     try {
       setLoading(true);
 
-      const found = getArticleById(id);
+      const found = await getArticleById(id);
       if (found) {
         setArticle(found);
         setError("");
@@ -46,7 +46,7 @@ export default function ArticlePage() {
       <div>
         <strong>Journalist:</strong> {" "}
         <span
-          style={{ color: "blue", cursor: "pointer" }}
+          style={{ cursor: "pointer" }}
           onClick={() => navigate(`/journalists/${article.journalistId}/articles`)}>
           {article.journalistName}
         </span>

@@ -10,7 +10,6 @@ export default function ArticleList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchArticles(); // Fetch all articles when component mounts
@@ -42,9 +41,18 @@ export default function ArticleList() {
     }
   };
 
+  const navigate = useNavigate(); 
+
+  const handleViewJournalist = (journalistId) => {
+    navigate(`/journalists/${journalistId}/articles`);
+  };
+
+
   const handleView = (id) => navigate(`/articles/${id}`);
 
   const handleEdit = (id) => navigate(`/articles/${id}/edit`);
+
+
 
   return (
     <>
@@ -59,6 +67,7 @@ export default function ArticleList() {
             onView={handleView}
             onEdit={handleEdit}
             onDelete={deleteArticle}
+            onViewJournalist={handleViewJournalist}
           />
         ))}
       </div>
@@ -70,7 +79,14 @@ function ArticleCard({ article, onView, onEdit, onDelete }) {
   return (
     <div className="article-card">
       <div className="article-title">{article.title}</div>
-      <div className="article-author">By {article.journalist}</div>
+      <div className="article-author">
+        By <span
+              style={{ cursor: "pointer" }}
+              onClick={() => onViewJournalist(article.journalistId)}
+            >
+              {article.journalistName}
+            </span>
+      </div>
 
       <div className="article-actions">
         <button className="button-tertiary" onClick={() => onEdit(article.id)}>
