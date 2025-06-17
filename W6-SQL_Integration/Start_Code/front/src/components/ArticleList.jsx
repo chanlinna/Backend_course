@@ -6,6 +6,7 @@ import { getArticles, removeArticle } from "../services/api";
 // ArticleList component
 //
 export default function ArticleList() {
+  const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -41,11 +42,6 @@ export default function ArticleList() {
     }
   };
 
-  const navigate = useNavigate(); 
-
-  const handleViewJournalist = (journalistId) => {
-    navigate(`/journalists/${journalistId}/articles`);
-  };
 
 
   const handleView = (id) => navigate(`/articles/${id}`);
@@ -67,7 +63,6 @@ export default function ArticleList() {
             onView={handleView}
             onEdit={handleEdit}
             onDelete={deleteArticle}
-            onViewJournalist={handleViewJournalist}
           />
         ))}
       </div>
@@ -75,15 +70,15 @@ export default function ArticleList() {
   );
 }
 
-function ArticleCard({ article, onView, onEdit, onDelete }) {
+export function ArticleCard({ article, onView, onEdit, onDelete }) {
+  const navigate = useNavigate(); 
   return (
     <div className="article-card">
       <div className="article-title">{article.title}</div>
       <div className="article-author">
         By <span
               style={{ cursor: "pointer" }}
-              onClick={() => onViewJournalist(article.journalistId)}
-            >
+              onClick={() => navigate(`/journalists/${article.journalistId}/articles`)}>
               {article.journalistName}
             </span>
       </div>

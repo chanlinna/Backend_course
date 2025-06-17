@@ -40,7 +40,7 @@ export default function ArticlePage() {
   if (!article) return <div>No article found.</div>;
 
   return (
-    <div>
+    <div className="article-page">
       <h2>{article.title}</h2>
       <p>{article.content}</p>
       <div>
