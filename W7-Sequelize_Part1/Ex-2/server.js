@@ -3,17 +3,9 @@ import { sequelize, Author, Book } from './db/database.js';
 
 const app = express();
 app.use(express.json());
-
 const port = 3000;
 
 const Data = async () => {
-  try {
-  await sequelize.sync({ force: true }); // Reset DB
-  } catch (error) {
-    console.error("Unable to connect:", error);
-  }
-
-
   const authors = await Promise.all([
     Author.create({ name: 'Ronan The Best', birthYear: 1990 }),
     Author.create({ name: 'Kim Ang', birthYear: 1995 }),
@@ -32,31 +24,48 @@ const Data = async () => {
   console.log('Sample data created');
 };
 
-Data();
-
-// Fetch all books by a given author
 app.get('/authors/:id/books', async (req, res) => {
-  const author = await Author.findByPk(req.params.id, { include: Book });
-  res.json(author?.Books || []);
+  try {
+    const author = await Author.findByPk(req.params.id, { include: Book });
+    if (!author) return res.status(404).json({ error: 'Author not found' });
+    res.json(author.Books);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// Create a new book for an existing author using .createBook()
 app.post('/authors/:id/books', async (req, res) => {
-  const author = await Author.findByPk(req.params.id);
-  if (!author) return res.status(404).json({ error: 'Author not found' });
+  try {
+    const author = await Author.findByPk(req.params.id);
+    if (!author) return res.status(404).json({ error: 'Author not found' });
 
-  const book = await author.createBook(req.body); 
-  res.json(book);
+    const book = await author.createBook(req.body);
+    res.json(book);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// List all authors along with their books
 app.get('/authors', async (req, res) => {
-  const authors = await Author.findAll({ include: Book });
-  res.json(authors);
+  try {
+    const authors = await Author.findAll({ include: Book });
+    res.json(authors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+async function start() {
+  try {
+    await sequelize.sync({ force: true });
+    await Data();
 
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('Error starting server:', error);
+  }
+}
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+start();
