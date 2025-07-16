@@ -119,4 +119,30 @@ export const login = async (req, res) => {
     }
 };
 
+/**
+ * @swagger
+ * /auth/users:
+ *   get:
+ *     summary: Get all users (protected)
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await db.User.findAll({ 
+      attributes: ['id', 'email'] 
+    });
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
 
